@@ -11,9 +11,17 @@ public class HelloWorldController{
     // GET
     // hello-world
 
-   // @RequestMapping(method = RequestMethod.GET , path = "/hello-world")
+    /************
+     *
+     *  @RequestMapping(method = RequestMethod.GET , path = "/hello-world") and
+     *   @GetMapping( path = "/hello-world")  are same
+     *
+     * @return
+     */
 
-    @GetMapping( path = "/hello-world")
+   @RequestMapping(method = RequestMethod.GET , path = "/hello-world")
+
+   // @GetMapping( path = "/hello-world")
  public String  HelloWorld() {
 
      return ("Hello World From Narayan Sau");

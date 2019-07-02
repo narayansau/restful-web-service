@@ -1,8 +1,7 @@
 package com.example.restfullwebservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class UserResource{
 
         for ( User  s : user.findAll() )  {
             allUser +=  s.toString();
-            allUser += "\\n";
+            allUser += System.lineSeparator();
         }
 
 
@@ -36,9 +35,17 @@ public class UserResource{
 
 
     // GET /user/{id}
+
     // retrieve one user
-    @GetMapping("/user/id")
-    public User  retrieveOneUser( int id ) {
+    @GetMapping("/user/{id}")
+    public User  retrieveOneUser( @PathVariable int id ) {
         return  user.findOne(id);
+    }
+
+    @PostMapping("/user")
+    public void postUser( @RequestBody User user) {
+        User saveUser = this.user.save( user );
+
+
     }
 }

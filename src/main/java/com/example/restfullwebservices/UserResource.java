@@ -1,13 +1,22 @@
 package com.example.restfullwebservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class UserResource{
@@ -43,7 +52,17 @@ public class UserResource{
     // retrieve one user
     @GetMapping("/user/{id}")
     public User  retrieveOneUser( @PathVariable int id ) {
-        return  user.findOne(id);
+
+        User gotAUser =   user.findOne(id);
+        if ( gotAUser == null) throw new UserNotFoundException( "id : " + id);
+
+        Resource <User> resource  = new Resource< User > ( gotAUser);
+        ControllerLinkBuilder linkTo  =
+                linkTo( methodOn(this.getClass()).
+                        retrieveAllUsers() );
+
+
+        return gotAUser;
     }
 
     @PostMapping("/user")

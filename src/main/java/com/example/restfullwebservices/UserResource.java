@@ -1,8 +1,12 @@
 package com.example.restfullwebservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -43,9 +47,23 @@ public class UserResource{
     }
 
     @PostMapping("/user")
-    public void postUser( @RequestBody User user) {
+    public ResponseEntity<User> postUser( @Valid @RequestBody User user) {
+        if(user.getId() == 0)
+            user.setId( this.user.getNextid() );
+
         User saveUser = this.user.save( user );
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest ()
+                .path( "/{id}" )
+                .buildAndExpand( user.getId() )
+                .toUri();
 
+             return  ResponseEntity .created(location).build();
 
+    }
+
+    @DeleteMapping ("/user/{id}")
+    public User  deleteOneUser( @PathVariable int id ) {
+        return  user.deleteOne(id);
     }
 }

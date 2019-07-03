@@ -2,8 +2,10 @@ package com.example.restfullwebservices;
 
 import org.springframework.stereotype.Component;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -13,7 +15,7 @@ public class UserDaoService{
     private static int id =0;
 
 
-    private static int getNextid() {
+    public static int getNextid() {
         return ++id;
     }
 
@@ -35,11 +37,37 @@ public class UserDaoService{
         return user;
     }
     public  User findOne(int id) {
+
+        boolean found = true;
         for ( User user: users) {
             if ( user.getId() == id)
                 return user;
+            else
+                found = false;
         }
+        if ( ! found )
+            throw new UserNotFoundException(  "id = " + id );
         return null;
 
     }
+
+    public  User deleteOne(int id) {
+
+        boolean found = true;
+        Iterator<User>  userIndex = users.iterator();
+        while( userIndex.hasNext() ) {
+            User user = userIndex.next();
+            if ( user.getId() == id) {
+                userIndex.remove();
+                return user;
+            }
+            else
+                found = false;
+        }
+        if ( ! found )
+            throw new UserNotFoundException(  "id = " + id );
+        return null;
+
+    }
+
 }

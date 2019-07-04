@@ -53,13 +53,14 @@ public class UserResource{
     @GetMapping("/user/{id}")
     public User  retrieveOneUser( @PathVariable int id ) {
 
-        User gotAUser =   user.findOne(id);
-        if ( gotAUser == null) throw new UserNotFoundException( "id : " + id);
+        User gotAUser=user.findOne( id );
+        if (gotAUser == null) throw new UserNotFoundException( "id : " + id );
 
-        Resource <User> resource  = new Resource< User > ( gotAUser);
-        ControllerLinkBuilder linkTo  =
-                linkTo( methodOn(this.getClass()).
-                        retrieveAllUsers() );
+        Resource <User> resource=new Resource <User>( gotAUser );
+        ControllerLinkBuilder linkTo =
+                linkTo( methodOn( this.getClass() ).
+                        retrieveOneUser(id) );
+        resource.add( linkTo.withRel( "all-users" ) );
 
 
         return gotAUser;
